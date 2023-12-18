@@ -7,6 +7,7 @@ import models.Student;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class StudentTable extends BaseTable implements TableOperations {
@@ -53,5 +54,25 @@ public class StudentTable extends BaseTable implements TableOperations {
             }
         }
         statement.executeBatch();
+    }
+
+    public List<Student> getStudentsFromDb() throws SQLException {
+        Statement statement = DBConnection.getStatement();
+        String query = "SELECT * FROM Student;";
+        var queryRes = statement.executeQuery(query);
+        List<Student> students = new ArrayList<Student>();
+
+        while (queryRes.next()){
+            String ulearnID = queryRes.getString("UlearnID");
+            String name = convertUtf8ToCp1251(queryRes.getString("name"));
+            String surname = convertUtf8ToCp1251(queryRes.getString("surname"));
+            String email = queryRes.getString("email");
+            String group = convertUtf8ToCp1251(queryRes.getString("studentGroup"));
+            String bdate = queryRes.getString("bdate");
+            String city = convertUtf8ToCp1251(queryRes.getString("city"));
+
+            students.add(new Student(ulearnID, name, surname, email, group, bdate, city));
+        }
+        return students;
     }
 }

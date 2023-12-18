@@ -86,4 +86,16 @@ public class Student {
         }
         this.city = city;
     }
+
+    public Student() {}
+
+    public Student(String ulearnId, String name, String surname, String email, String group, String bdate, String city) {
+        this.ulearnId = ulearnId;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.group = group;
+        this.bdate = bdate;
+        this.city = city;
+    }
 }

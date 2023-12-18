@@ -5,13 +5,12 @@ import csvParser.Parser;
 import db.DBConnection;
 import db.TableOperations;
 import db.tables.BaseTable;
-import models.Student;
-import models.Task;
-import models.TaskType;
+import models.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -80,5 +79,33 @@ public class StudentExercisesTable extends BaseTable implements TableOperations 
             }
         }
         statement.executeBatch();
+    }
+
+    public void getStudentExercisesFromDbAndAddToStudentPerformance(List<StudentPerformance> studentPerformances) throws SQLException, CsvValidationException, IOException {
+        List<Task> tasks = parser.getAllTasks();
+        var ids = tasks.stream().filter(task -> task.getTaskType() == TaskType.Exercise).map(Task::getId).collect(Collectors.toList());
+        Statement statement = DBConnection.getStatement();
+        String query = "SELECT * FROM StudentExercises;";
+        var queryRes = statement.executeQuery(query);
+
+        while (queryRes.next()){
+            String ulearnID = queryRes.getString("UlearnID");
+
+            for (StudentPerformance studentPerformance: studentPerformances) {
+                if (studentPerformance.getUlearnId().equals(ulearnID)) {
+                    for (int id: ids) {
+                        int currentScore = Integer.parseInt(queryRes.getString(String.format("id%s", id)));
+
+                        for (Section section: studentPerformance.getSections()) {
+                            for (Task task: section.getTasks()) {
+                                if (task.getId() == id) {
+                                    task.setStudentScore(currentScore);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

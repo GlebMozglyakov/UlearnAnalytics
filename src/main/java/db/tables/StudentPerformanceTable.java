@@ -3,10 +3,15 @@ package db.tables;
 import db.DBConnection;
 import db.TableOperations;
 import db.tables.BaseTable;
+import models.Section;
+import models.Student;
+import models.StudentPerformance;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class StudentPerformanceTable extends BaseTable implements TableOperations {
     public StudentPerformanceTable() throws SQLException {
@@ -48,5 +53,26 @@ public class StudentPerformanceTable extends BaseTable implements TableOperation
     @Override
     public void createForeignKeys() throws SQLException {
 
+    }
+
+    public List<StudentPerformance> getStudentPerformanceFromDb(List<Section> allSections) throws SQLException {
+        Statement statement = DBConnection.getStatement();
+        String query = "SELECT * FROM StudentPerformance;";
+        var queryRes = statement.executeQuery(query);
+
+        List<StudentPerformance> studentsPerformances = new ArrayList<StudentPerformance>();
+
+        while (queryRes.next()){
+            String ulearnID = queryRes.getString("UlearnID");
+            int activityScores = Integer.parseInt(queryRes.getString("activityScores"));
+            int exerciseScores = Integer.parseInt(queryRes.getString("exerciseScores"));
+            int practiceScores = Integer.parseInt(queryRes.getString("practiceScores"));
+            int seminarScores = Integer.parseInt(queryRes.getString("seminarScores"));
+
+            StudentPerformance currentStudentPerformance = new StudentPerformance(ulearnID, activityScores, exerciseScores, practiceScores, seminarScores, allSections);
+            studentsPerformances.add(currentStudentPerformance);
+        }
+
+        return studentsPerformances;
     }
 }

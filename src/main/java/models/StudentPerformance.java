@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class StudentPerformance {
-    private final UUID id;
-    private final UUID studentId;
+    private final String ulearnId;
+    private final int maxActivityScore;
     private final int maxExerciseScore;
     private final int maxPracticeScore;
     private final int maxSeminarScore;
@@ -15,31 +15,8 @@ public class StudentPerformance {
     private int totalSeminarScore;
     private final List<Section> sections;
 
-    public StudentPerformance(UUID id,
-                              UUID studentId,
-                              int maxExerciseScore,
-                              int maxPracticeScore,
-                              int maxSeminarScore,
-                              int totalExerciseScore,
-                              int totalPracticeScore,
-                              int totalSeminarScore) {
-        this.id = id;
-        this.studentId = studentId;
-        this.maxExerciseScore = maxExerciseScore;
-        this.maxPracticeScore = maxPracticeScore;
-        this.maxSeminarScore = maxSeminarScore;
-        this.totalExerciseScore = totalExerciseScore;
-        this.totalPracticeScore = totalPracticeScore;
-        this.totalSeminarScore = totalSeminarScore;
-        sections = new ArrayList<>();
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public UUID getStudentId() {
-        return studentId;
+    public String getUlearnId() {
+        return ulearnId;
     }
 
     public int getMaxExerciseScore() {
@@ -52,6 +29,10 @@ public class StudentPerformance {
 
     public int getMaxSeminarScore() {
         return maxSeminarScore;
+    }
+
+    public int getMaxActivityScore() {
+        return maxActivityScore;
     }
 
     public int getTotalExerciseScore() {
@@ -91,8 +72,7 @@ public class StudentPerformance {
     }
 
     public List<Section> getSections() {
-        List<Section> copySections = List.copyOf(sections);
-        return copySections;
+        return sections;
     }
 
     public void addSections(List<Section> addedSections) {
@@ -109,5 +89,14 @@ public class StudentPerformance {
         } else {
             throw new IllegalArgumentException("Раздел должен быть проинициализирован");
         }
+    }
+
+    public StudentPerformance(String ulearnId, int maxActivityScore, int maxExerciseScore, int maxPracticeScore, int maxSeminarScore, List<Section> sections) {
+        this.ulearnId = ulearnId;
+        this.maxActivityScore = maxActivityScore;
+        this.maxExerciseScore = maxExerciseScore;
+        this.maxPracticeScore = maxPracticeScore;
+        this.maxSeminarScore = maxSeminarScore;
+        this.sections = sections;
     }
 }

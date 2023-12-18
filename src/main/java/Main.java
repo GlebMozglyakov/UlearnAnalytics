@@ -3,9 +3,10 @@ import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import csvParser.Parser;
 import db.DBConnection;
+import gui.drawer.*;
 import models.Section;
 import models.Student;
-import models.Task;
+import models.StudentPerformance;
 import vkAPI.VkParser;
 
 import java.io.IOException;
@@ -26,7 +27,6 @@ public class Main {
         List<Section> sections = parser.parseAndGetSections();
 
         var tasks = parser.parseUsersTasksScores();
-        System.out.println(tasks);
 
         try{
             DBConnection dbConnection = new DBConnection();
@@ -43,6 +43,20 @@ public class Main {
         //DBConnection.getSectionTable().addSections(sections);
         //DBConnection.getTaskTable().addTasks(sections);
         //DBConnection.getStudentExercisesTable().addStudentScores();
-        DBConnection.getStudentPracticesTable().addStudentScores();
+        //DBConnection.getStudentPracticesTable().addStudentScores();
+
+        List<Student> studentsFromDb = DBConnection.getStudentTable().getStudentsFromDb();
+        List<Section> allSections = DBConnection.getSectionTable().getSectionsFromFromDb();
+        DBConnection.getTaskTable().getTasksFromDbandAddToSections(allSections);
+        List<StudentPerformance> studentPerformancesFromDb = DBConnection.getStudentPerformanceTable().getStudentPerformanceFromDb(allSections);
+
+        DBConnection.getStudentExercisesTable().getStudentExercisesFromDbAndAddToStudentPerformance(studentPerformancesFromDb);
+        DBConnection.getStudentPracticesTable().getStudentPracticesFromDbAndAddToStudentPerformance(studentPerformancesFromDb);
+
+        new PieBdateChartDrawer("Количество студентов по месяцу рождения", studentsFromDb).setVisible(true);
+        new BarChartDrawer(studentsFromDb).setVisible(true);
+        new BarPracticeChartDrawer(studentPerformancesFromDb).setVisible(true);
+        new BarExerciseChartDrawer(studentPerformancesFromDb).setVisible(true);
+        new BarBestStudentsChartDrawer(studentPerformancesFromDb).setVisible(true);
     }
 }

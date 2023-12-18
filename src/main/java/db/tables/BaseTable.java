@@ -63,4 +63,15 @@ public class BaseTable implements Closeable {
             return null;
         }
     }
+
+    public static String convertUtf8ToCp1251(String utf8String) {
+        try {
+            byte[] utf8Bytes = utf8String.getBytes("UTF-8");
+            return new String(utf8Bytes, "CP1251");
+        } catch (UnsupportedEncodingException e) {
+            // обработка исключения
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

@@ -19,14 +19,13 @@ public class Task {
         this.sectionName = sectionName;
     }
 
-    public Task(int id, String name, int sectionId, String sectionName, TaskType taskType, int maxScore, int studentScore) {
+    public Task(int id, String name, int sectionId, String sectionName, TaskType taskType, int maxScore) {
         this.id = id;
         this.name = name;
         this.sectionId = sectionId;
         this.sectionName = sectionName;
         this.taskType = taskType;
         this.maxScore = maxScore;
-        this.studentScore = studentScore;
     }
 
     public int getId() {
@@ -58,7 +57,7 @@ public class Task {
     }
 
     public void setStudentScore(int score) {
-        if (score >= 0 && score <= maxScore) {
+        if (score >= 0) {
             studentScore = score;
         } else {
             throw new IllegalArgumentException("Балл должен быть больше 0 и меньше максимального");
